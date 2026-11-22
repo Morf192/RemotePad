@@ -25,8 +25,8 @@ internal sealed class ControlLayout
         this.keys = keys.Select(Normalize).ToArray();
         if (this.keys.Length != Actions.Length || this.keys.Any(key => !IsBindable(key))
             || this.keys.Distinct().Count() != Actions.Length)
-            throw new ArgumentException("Раскладка должна содержать по одной уникальной клавише для каждого действия.");
-        if (IsMouse(this[PadControl.Pause])) throw new ArgumentException("Для паузы назначь клавишу с клавиатуры.");
+            throw new ArgumentException("Assign a different key or mouse button to each action.");
+        if (IsMouse(this[PadControl.Pause])) throw new ArgumentException("Assign a keyboard key to the pause action.");
         bindings = Actions.ToDictionary(action => this[action]);
     }
 
@@ -50,7 +50,7 @@ internal sealed class ControlLayout
     public ControlLayout WithKey(PadControl control, Key newKey)
     {
         newKey = Normalize(newKey);
-        if (!IsBindable(newKey)) throw new ArgumentException("Эту клавишу нельзя назначить.");
+        if (!IsBindable(newKey)) throw new ArgumentException("This key cannot be assigned.");
         var copy = (Key[])keys.Clone();
         if (TryGetAction(newKey, out PadControl other)) copy[(int)other] = this[control];
         copy[(int)control] = newKey;
@@ -91,7 +91,7 @@ internal static class ControlSettingsFile
         var file = JsonSerializer.Deserialize<StoredSettings>(File.ReadAllText(path));
         if (file?.Keys == null || file.Sensitivity is < 10 or > 300
             || !ControlLayout.Actions.All(action => file.Keys.ContainsKey(action.ToString())))
-            throw new InvalidDataException("В файле настроек неполная раскладка или неверная чувствительность.");
+            throw new InvalidDataException("The settings file contains an incomplete layout or an invalid sensitivity.");
         return new ControlSettings(new ControlLayout(ControlLayout.Actions.Select(action => (Key)file.Keys[action.ToString()])),
             file.MouseCamera, file.Sensitivity, file.InvertY);
     }

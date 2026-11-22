@@ -177,7 +177,7 @@ internal sealed class PadWindow : Form
         MaximizeBox = false;
         Font = new Font("Segoe UI", 10);
         var footer = new Panel { Dock = DockStyle.Bottom, Height = 42 };
-        var settings = new Button { Dock = DockStyle.Right, Width = 168, Text = "Управление…" };
+        var settings = new Button { Dock = DockStyle.Right, Width = 168, Text = "Controls…" };
         footer.Controls.Add(toggle);
         footer.Controls.Add(settings);
         Controls.Add(layoutHint);
@@ -204,7 +204,7 @@ internal sealed class PadWindow : Form
         }
         catch (Win32Exception error)
         {
-            MessageBox.Show(this, "Не удалось подключить мышь. Управление камерой с клавиатуры доступно.\n" + error.Message,
+            MessageBox.Show(this, "Mouse camera is unavailable. You can still use the keyboard to move the camera.\n" + error.Message,
                 Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
         RefreshLayout();
@@ -250,8 +250,8 @@ internal sealed class PadWindow : Form
             KeyFor(PadControl.MoveDown), KeyFor(PadControl.MoveRight));
         string camera = string.Join(" / ", KeyFor(PadControl.LookUp), KeyFor(PadControl.LookLeft),
             KeyFor(PadControl.LookDown), KeyFor(PadControl.LookRight));
-        if (rawMouseRegistered && input.Settings.MouseCamera) camera = "мышь или " + camera;
-        layoutHint.Text = $"Движение — {movement}\nКамера — {camera}\nLT — {KeyFor(PadControl.LT)}    RT — {KeyFor(PadControl.RT)}    R3 — {KeyFor(PadControl.R3)}\nLB — {KeyFor(PadControl.LB)}    RB — {KeyFor(PadControl.RB)}    A / × — {KeyFor(PadControl.A)}";
+        if (rawMouseRegistered && input.Settings.MouseCamera) camera = "mouse or " + camera;
+        layoutHint.Text = $"Move — {movement}\nCamera — {camera}\nLT — {KeyFor(PadControl.LT)}    RT — {KeyFor(PadControl.RT)}    R3 — {KeyFor(PadControl.R3)}\nLB — {KeyFor(PadControl.LB)}    RB — {KeyFor(PadControl.RB)}    A / × — {KeyFor(PadControl.A)}";
     }
 
     private void ScheduleFlush()
@@ -265,9 +265,9 @@ internal sealed class PadWindow : Form
     private void RefreshStatus()
     {
         string key = ControlsDialog.KeyName(input.Settings.Layout[PadControl.Pause]);
-        string caption = input.Active ? $"Приостановить ({key})" : $"Включить ({key})";
+        string caption = input.Active ? $"Pause ({key})" : $"Enable ({key})";
         if (toggle.Text == caption) return;
-        status.Text = input.Active ? "Эмуляция включена" : "Геймпад подключён · ввод на паузе";
+        status.Text = input.Active ? "Emulation enabled" : "Controller connected · input paused";
         status.ForeColor = input.Active ? Color.DarkGreen : SystemColors.ControlText;
         toggle.Text = caption;
     }
@@ -316,7 +316,7 @@ internal static class Program
             if (args.Length != 0)
             {
                 if (args.Length != 1 || args[0] is not ("--self-test" or "--driver-test"))
-                    throw new ArgumentException("Допустимые параметры: --self-test, --driver-test.");
+                    throw new ArgumentException("Use --self-test or --driver-test.");
                 using var report = new System.IO.StringWriter();
                 try
                 {
@@ -327,7 +327,7 @@ internal static class Program
                 {
                     throw new InvalidOperationException(report.ToString() + "FAIL " + error.Message, error);
                 }
-                MessageBox.Show(report.ToString(), "RemotePad — результаты проверок",
+                MessageBox.Show(report.ToString(), "RemotePad Test Results",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return 0;
             }
@@ -337,7 +337,7 @@ internal static class Program
         }
         catch (VigemBusNotFoundException)
         {
-            MessageBox.Show("Драйвер ViGEmBus не найден. Ссылка на официальный установщик есть в README.",
+            MessageBox.Show("The ViGEmBus driver is missing. See the README for the official installer.",
                 "RemotePad", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return 1;
         }
@@ -358,7 +358,7 @@ internal static class Program
         catch (Exception error) when (error is IOException or UnauthorizedAccessException or JsonException or ArgumentException)
         {
             settings = ControlSettings.Default();
-            MessageBox.Show("Используется стандартное управление.\n" + error.Message, "RemotePad",
+            MessageBox.Show("Could not load saved controls. Using the standard layout.\n" + error.Message, "RemotePad",
                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
         var input = new KeyboardInput(settings);
@@ -378,6 +378,6 @@ internal static class Program
         }
 
         if (sendError != null)
-            throw new InvalidOperationException("Не удалось отправить ввод: " + sendError.Message, sendError);
+            throw new InvalidOperationException("Could not send controller input. " + sendError.Message, sendError);
     }
 }

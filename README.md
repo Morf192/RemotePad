@@ -1,45 +1,41 @@
-# RemotePad для Windows x64
+# RemotePad for Windows
 
-RemotePad переводит нажатия клавиатуры и движения мыши в отчёты виртуального контроллера Xbox 360. Раскладка рассчитана на управление в GTA VI через Xbox Remote Play в браузере и через chiaki-ng для PS5. Назначение действий в игре зависит от её настроек.
+RemotePad turns keyboard and mouse input into a virtual Xbox 360 controller. Use it on Windows with Xbox Remote Play in a browser or with chiaki-ng for PlayStation 5. You can rebind every controller action, adjust mouse sensitivity, and invert the vertical camera axis.
 
-## Запуск
+## Quick start
 
-1. Распакуйте архив целиком. Для папки `win-x64` требуются Windows x64, **.NET 8 Desktop Runtime x64** и **ViGEmBus**. Установщик ViGEmBus запускается отдельно с правами администратора. ViGEmBus снят с поддержки. В архиве есть библиотека клиента, а установщики доступны у разработчиков. [Microsoft .NET 8](https://dotnet.microsoft.com/download/dotnet/8.0) · [ViGEmBus 1.22.0](https://github.com/nefarius/ViGEmBus/releases/tag/v1.22.0)
-2. Запустите `win-x64\RemotePad.exe`. Контроллер подключается сразу, а захват клавиатуры начинается на паузе.
-3. Для **Xbox Remote Play** откройте страницу удалённой игры и начните сеанс со своей Xbox в браузере с поддержкой Gamepad API. Если браузер ждёт активности контроллера, нажмите F8, затем пробел (A) в активной вкладке. [Xbox Remote Play](https://www.xbox.com/remoteplay)
-4. Для **PS5** запустите chiaki-ng с уже настроенным подключением к консоли. Начните сеанс при запущенном RemotePad и проверьте стики и кнопки. Если клиент был открыт до подключения контроллера и ввод не появился, перезапустите chiaki-ng. [Документация chiaki-ng](https://streetpea.github.io/chiaki-ng/)
-5. Переключайте захват клавишей **F8** или кнопкой в окне RemotePad. На паузе отправляется нейтральный отчёт для стиков, кнопок и триггеров. Удерживаемые при переключении клавиши нужно отпустить и нажать заново. При закрытии окна контроллер отключается.
+1. Download the Windows x64 ZIP from [Releases](https://github.com/Morf192/RemotePad/releases). Extract the entire ZIP.
+2. Install [.NET 8 Desktop Runtime x64](https://dotnet.microsoft.com/download/dotnet/8.0) and [ViGEmBus 1.22.0](https://github.com/nefarius/ViGEmBus/releases/tag/v1.22.0). ViGEmBus requires administrator rights to install and is no longer maintained.
+3. Run `win-x64\RemotePad.exe`. The virtual controller connects immediately, and input starts paused.
+4. Open [Xbox Remote Play](https://www.xbox.com/remoteplay) or start a session with your PS5 in [chiaki-ng](https://chiaki-ng.github.io/chiaki-ng/setup/configuration/). If the Xbox browser tab is waiting for controller input, press **F8** and then **Space** while the tab is active.
+5. Press **F8** to enable or pause emulation. Assigned keyboard keys and mouse buttons are captured across Windows while emulation is enabled. Pause before typing or using the desktop.
 
-Захват работает глобально на рабочем столе Windows. Пока он включён, назначенные клавиши перехватываются и в других приложениях. Перед набором текста нажмите F8. Для буквенных клавиш используйте английскую раскладку. Если некоторые комбинации не регистрируются одновременно, проверьте их на своей клавиатуре.
+## Standard controls
 
-## Раскладка
-
-Выберите «Управление…», чтобы поменять клавиши или кнопки мыши, выбрать пресет или настроить чувствительность и вертикальную инверсию мыши. При открытии настроек эмуляция ставится на паузу. Кнопка «Стандарт» восстанавливает эту раскладку и параметры мыши. Новые назначения сохраняются после нажатия «Сохранить».
-
-| Клавиши | Xbox 360 |
+| Input | Xbox 360 action |
 | --- | --- |
-| W / A / S / D | Левый стик, движение |
-| Мышь или стрелки | Правый стик, камера |
-| Пробел / X / F / R | A / B / X / Y |
-| ЛКМ / ПКМ | LT / RT |
+| W / A / S / D | Left stick (movement) |
+| Mouse movement or arrow keys | Right stick (camera) |
+| I / J / K / L | D-pad |
+| Space / X / F / R | A / B / X / Y |
+| Left click / Right click | LT / RT |
 | Q / E | LB / RB |
-| Shift / СКМ | Нажатия левого и правого стиков (L3 / R3) |
-| I / J / K / L | Крестовина |
+| Shift / Middle click | L3 / R3 |
 | Tab / Enter | View / Menu |
 | Home | Guide |
-| F8 | Включение ввода / пауза |
+| F8 | Enable or pause emulation |
 
-При управлении стиками с клавиатуры клавиша даёт полное отклонение, диагонали нормализованы, противоположные направления гасятся. Триггеры работают как кнопки. В исходниках chiaki-ng кнопки View и Menu отображаются на Share и Options соответственно, Guide — на PS, если SDL получает эту кнопку. У Xbox 360 отсутствует команда тачпада DualSense. Для действий с тачпадом используйте отдельное управление в chiaki-ng. [Обработка контроллеров в chiaki-ng](https://github.com/streetpea/chiaki-ng/blob/main/gui/src/controllermanager.cpp)
+Open **Controls…** and double-click an action to rebind it. Select **Standard** to restore the default layout and mouse settings, then select **Save** to apply your changes. Opening the controls window pauses emulation.
 
-## Сборка и проверки
+On PS5, chiaki-ng maps the Xbox gamepad to PlayStation controls. Use a separate binding in chiaki-ng if you need the DualSense touchpad. [chiaki-ng controller options](https://chiaki-ng.github.io/chiaki-ng/setup/controlling/)
 
-После распаковки выполните из каталога `src` с установленным .NET SDK 8:
+## Build from source
+
+The full C# source and tests are in [src](src). You can also download the separate source ZIP from the release page. With the .NET 8 SDK installed, run these commands from the repository root.
 
 ```powershell
-dotnet publish RemotePad.csproj -c Release -r win-x64 --self-contained false -o ./publish
-dotnet run --project tests/RemotePad.Tests.csproj -c Release
+dotnet publish src/RemotePad.csproj -c Release -r win-x64 --self-contained false -o publish
+dotnet run --project src/tests/RemotePad.Tests.csproj -c Release
 ```
 
-В Windows сборка открывает окно с результатами при запуске с `--self-test`. Параметр `--driver-test` дополнительно проверяет через XInput появление нового контроллера, отчёт со стиками, триггерами и кнопками, возврат в нейтраль и отключение. Для этой проверки нужны ViGEmBus и свободный слот XInput.
-
-Проверены сохранение раскладки, работа мыши с правым стиком и сброс ввода через Windows XInput. Игровой отклик в GTA VI зависит от настроек игры и сеанса Remote Play.
+On Windows, you can also run `RemotePad.exe --self-test` or `RemotePad.exe --driver-test`. The driver test requires ViGEmBus and a free XInput slot. Automated checks cover layout persistence, mouse bindings, and virtual controller input through Windows XInput. GTA VI gameplay through Remote Play has not been verified.
